@@ -1,0 +1,14 @@
+{
+    "model_name": "SLOWFAST_8x8_R50.pyth",
+    "side_size": 256,
+    "mean": [0.45, 0.45, 0.45],
+    "std": [0.225, 0.225, 0.225],
+    "crop_size": 256,
+    "num_frames": 32,
+    "sampling_rate": 2,
+    "frames_per_second": 30,
+    "slowfast_alpha": 4,
+    "num_clips": 10,
+    "num_crops": 3,
+    "alpha": 4
+}

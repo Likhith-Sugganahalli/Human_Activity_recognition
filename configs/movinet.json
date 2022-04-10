@@ -1,0 +1,8 @@
+{
+    "comment_on_model_id": "possible model sizes are: a0,a1,a2,a3,a4,a5 which corespond to model sizes : xs,s,m,l,xl,xxl",
+    "model_id": "a2",
+	"resolution": 224,
+	"video_fps": 12,
+	"display_fps": 12,
+    "model_name": "movinet_a2_stream_kinetics-600_classification_3"
+}
