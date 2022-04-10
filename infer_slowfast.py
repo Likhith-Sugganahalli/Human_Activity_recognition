@@ -4,7 +4,6 @@ import argparse
 from typing import Dict
 from typing import List
 import json
-import urllib
 from slowfast.slowfast import load_model,apply_transform,load_video
 
 from utils import get_project_root,get_json,load_filepaths_from_folder
