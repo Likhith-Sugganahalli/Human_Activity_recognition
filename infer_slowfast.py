@@ -55,7 +55,9 @@ def main(model_filepath,videos_filepath):
 
         # Map the predicted classes to the label names
         pred_class_names = [kinetics_id_to_classname[int(i)] for i in pred_classes]
+        print(video_path)
         print("Top 5 predicted labels: %s" % ", ".join(pred_class_names))
+        print("##########")
 
 
 if __name__ == "__main__":
