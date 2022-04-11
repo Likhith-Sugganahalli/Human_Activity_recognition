@@ -3,20 +3,35 @@ import tensorflow_hub as hub
 
 
 def process_video_input(input_video: tf.Tensor,resolution=224):
+	""" function to normalize input video and resize it to the input size needed for the model
+	args:
+		(input_video) loaded input video 
+		(resolution) resolution to which the video has to be resized
+
+	return:
+		(video) processed input video
+	"""
 	video = tf.cast(input_video, tf.float32) / 255.
 	video = tf.image.resize(video, [resolution, resolution], preserve_aspect_ratio=True)
 
 	return video
 
-def get_top_k(probs, label_map,k=5 ):
-	"""Outputs the top k model labels and probabilities on the given video."""
+def get_top_k(probs: tf.Tensor, label_map,k=5 )-> tuple():
+	"""Outputs the top k model labels and probabilities on the given video.
+	args:
+		(probs) probabilities outputed by the model prediction
+		(label_map) class labels the model was trained on
+
+	return:
+		tuple(zip(top_labels, top_probs)) tuple of top probs and their respective labels
+	"""
 	top_predictions = tf.argsort(probs, axis=-1, direction='DESCENDING')[:k]
 	top_labels = tf.gather(label_map, top_predictions, axis=-1)
 	top_labels = [label.decode('utf8') for label in top_labels.numpy()]
 	top_probs = tf.gather(probs, top_predictions, axis=-1).numpy()
 	return tuple(zip(top_labels, top_probs))
 
-def predict_top_k(model, video, label_map,k=5 ):
+def predict_top_k(model: tf.keras.Model, video, label_map: tf.Tensor,k=5 ):
 	"""Outputs the top k model labels and probabilities on the given video."""
 	outputs = model.predict(video[tf.newaxis])[0]
 	probs = tf.nn.softmax(outputs)
@@ -58,7 +73,13 @@ def load_movinet_from_hub(model_id: str, model_mode="stream", hub_version=3) -> 
 	return model
 
 def load_movinet_from_local_path(filepath: str,model_mode="stream",hub_version=3) -> tf.keras.Model:
-	"""Loads a MoViNet model from TF Hub."""
+	"""Loads a MoViNet model from local file path.
+	args:
+		(filepath) path to local model file
+
+	return
+		(model) loaded model 
+	"""
 	#hub_url = f'https://tfhub.dev/tensorflow/movinet/{model_id}/{model_mode}/kinetics-600/classification/{hub_version}'
 
 	encoder = hub.KerasLayer(hub.load(filepath), trainable=True)
@@ -92,7 +113,7 @@ def load_movinet_from_local_path(filepath: str,model_mode="stream",hub_version=3
 
 	return model
 
-def get_top_k_streaming_labels(probs, label_map,k=5,):
+def get_top_k_streaming_labels(probs: tf.Tensor, label_map: tf.Tensor,k=5,):
 	"""Returns the top-k labels over an entire video sequence.
 
 	Args:
@@ -124,8 +145,8 @@ def get_top_k_streaming_labels(probs, label_map,k=5,):
 	return top_probs, top_labels, top_probs_idx
 
 def plot_streaming_top_preds_at_step(
-	top_probs,
-	top_labels,
+	top_probs: tf.Tensor,
+	top_labels: tf.Tensor,
 	step=None,
 	image=None,
 	legend_loc='lower left',
@@ -204,8 +225,8 @@ def plot_streaming_top_preds_at_step(
 	return image, (fig, ax, ax2)
 
 def plot_streaming_top_preds(
-	probs,
-	video,
+	probs: tf.Tensor,
+	video: tf.Tensor,
 	top_k=5,
 	video_fps=25.,
 	figure_height=500,
@@ -248,12 +269,18 @@ def plot_streaming_top_preds(
 	return np.array(images)
 
 def generate_plot(
-	model,
-	input_video,
-	counter,
-	resolution=224,
-	video_fps=25,
-	display_fps=25):
+	model: tf.keras.Model,
+	input_video: tf.Tensor,
+	video_fps=25):
+	"""function to generate a video plot of model output.
+
+	Args:
+	(model) loaded model
+	(input_video): the video to run prediction on.
+
+	Returns:
+	A numpy array representing the output video.
+	"""
 
 	video = process_video_input(input_video)
 

@@ -11,11 +11,16 @@ import tensorflow as tf
 from utils import get_json,get_project_root,load_filepaths_from_folder,load_tf_labels,load_gif_generator
 from movinet.movinet import load_movinet_from_local_path,get_top_k_streaming_labels,process_video_input
 
-
-
-
-def generate_result(model: tf.keras.Model,input_video: tf.Tensor,label_map: tf.Tensor,resolution=224) -> List[str]:
-
+def generate_result(model: tf.keras.Model,input_video: tf.Tensor,label_map: tf.Tensor) -> List[str]:
+    """ function to process input video, run prediction, process it and output top 5 labels
+    args:
+        (model) loaded model
+        (input_video) loaded input
+        (label_map) labels for mapping prediction outputs
+        (resolution)
+    return:
+        (top_labels) list of top 5 prediction labels for the input video
+    """
     #process the incoming video, normalize it and resize it
     video = process_video_input(input_video)
 
@@ -45,6 +50,14 @@ def generate_result(model: tf.keras.Model,input_video: tf.Tensor,label_map: tf.T
 
 
 def main(model_filepath, videos_filepath) -> None:
+    """ main function serves as the entry point to the script, initializes the model, and calls generate result on it
+    args: 
+        (model_filepath)path to savedModel folder
+        (video_filepath)path to folder containing input gif files
+    
+    returns:
+        None
+    """
     dir_root_path = get_project_root()
 
     config = get_json(json_path=os.path.join(dir_root_path,"configs","movinet.json"))
@@ -67,7 +80,7 @@ def main(model_filepath, videos_filepath) -> None:
     display_fps = config["display_fps"] 
 
     for video,filename in generated_videos:
-        labels  = generate_result(model,video,kinetics_600_labels,resolution)
+        labels  = generate_result(model,video,kinetics_600_labels)
         print(filename)
         print(labels)
         print("############")

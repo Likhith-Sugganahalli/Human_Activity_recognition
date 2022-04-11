@@ -9,11 +9,20 @@ from slowfast.slowfast import load_model,apply_transform,load_video
 from utils import get_project_root,get_json,load_filepaths_from_folder
 
 
-def main(model_filepath,videos_filepath):
+def main(model_filepath: str,videos_filepath: str) -> None:
+    """ main function serves as the entry point to the script, creates model, processes input and calls prediction on it
+    args: 
+        (model_filepath)path to savedModel folder
+        (video_filepath)path to folder containing input video files
+    
+    returns:
+        None
+    """
     root_dir_path = get_project_root()
 
     config = get_json(os.path.join(root_dir_path,"configs","slowfast.json"))
     
+    # videos_filepath = os.path.join(root_dir_path,"gifs")
     list_gifs = list(load_filepaths_from_folder(videos_filepath))
     kinetics_classnames = get_json(os.path.join(root_dir_path,"configs","kinetics_classnames.json"))
 
@@ -22,7 +31,7 @@ def main(model_filepath,videos_filepath):
     device = "cpu"
 
     # model_filepath = os.path.join(root_dir_path,"models",model_name)
-    # videos_filepath = os.path.join(root_dir_path,"gifs")
+    
     model = load_model(model_filepath)
     model = model.eval()
     model = model.to(device)

@@ -44,6 +44,7 @@ class PackPathway(torch.nn.Module):
 
 
 def load_video(video_path: str,config: json) -> EncodedVideo:
+    """ function to load input video file as a encoded_video"""
     # The duration of the input clip is also specific to the model.
     clip_duration = (config["num_frames"] * config["sampling_rate"])/config["frames_per_second"]
 
@@ -60,7 +61,7 @@ def load_video(video_path: str,config: json) -> EncodedVideo:
     return video_data
 
 def apply_transform(input_video: dict,config: json) -> dict:
-    
+    """ function to apply transformations on input video file"""
     transform =  ApplyTransformToKey(
         key="video",
         transform=Compose(
@@ -307,6 +308,7 @@ def load_checkpoint(
 
 
 def load_model(filepath_to_checkpoint: str):
+    """ function to create model graph and to load given checkpoint file into it"""
     model = create_slowfast(model_num_class=400)
     load_checkpoint(filepath_to_checkpoint,model)
     return model
